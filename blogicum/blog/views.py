@@ -55,11 +55,14 @@ def index(request):
 def post_detail(request, id: int):
     """View function post_detail ."""
     template = 'blog/detail.html'
-    return render(request, template, {'post': posts[id]})
+    try:
+        return render(request, template, {'post': posts[id]})
+    except IndexError:
+        print('Error! There is no post with such ID.')
 
 
 def category_posts(request, category_slug):
     """View function category_posts."""
     template = 'blog/category.html'
-    return render(request, template, {"category_slug": category_slug,
-                                      "posts": posts})
+    return render(request, template, {'category_slug': category_slug,
+                                      'posts': posts})

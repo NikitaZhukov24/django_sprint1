@@ -1,7 +1,8 @@
 {% extends "base.html" %}
+{% block title %}
+  {{post.location}}. {{post.date}}
+{% endblock %}
 {% block content %}
-<!-- Формируется из локации и даты -->
-<title>{{post.location}}. {{post.date}}</title>
       <div class="container py-5">
         <article>
           <ul>

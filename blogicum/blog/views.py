@@ -1,4 +1,5 @@
 """This module provides views functions for blog app."""
+from django.http import Http404
 from django.shortcuts import render
 
 # Create your views here.
@@ -45,6 +46,12 @@ posts = [
     },
 ]
 
+ids = {}
+position = 0
+for post in posts:
+    ids[post['id']] = position
+    position += 1
+
 
 def index(request):
     """View function index."""
@@ -55,10 +62,11 @@ def index(request):
 def post_detail(request, id: int):
     """View function post_detail ."""
     template = 'blog/detail.html'
+    print(ids)
     try:
-        return render(request, template, {'post': posts[id]})
-    except IndexError:
-        print('Error! There is no post with such ID.')
+        return render(request, template, {'post': posts[ids[id]]})
+    except (IndexError, KeyError):
+        raise Http404("Post does not exist")
 
 
 def category_posts(request, category_slug):

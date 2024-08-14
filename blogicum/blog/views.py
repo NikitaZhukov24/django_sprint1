@@ -46,11 +46,8 @@ posts = [
     },
 ]
 
-ids = {}
-position = 0
-for post in posts:
-    ids[post['id']] = position
-    position += 1
+post_ids = {post['id']: position
+            for position, post in enumerate(posts) if 'id' in post}
 
 
 def index(request):
@@ -62,10 +59,17 @@ def index(request):
 def post_detail(request, id: int):
     """View function post_detail ."""
     template = 'blog/detail.html'
-    print(ids)
     try:
-        return render(request, template, {'post': posts[ids[id]]})
-    except (IndexError, KeyError):
+        # Исходя из исправления комментария, указанного ниже
+        # "Не забывай, что ID поста - это не позиция в списке, а поле id в словаре. 
+        # Поэтому для поиска по ID удобнее было бы создать еще один словарь, в котором будут храниться
+        # пары ID поста - позиция в списке. И этот словарь лучше вне функции объявить, чтобы лишний раз
+        # не создавать его"
+        # Следует обратить внимание на ключевые слова
+        # "Пары ID поста - позиция в списке"
+        # Именно таким и сделан словарь post_ids
+        return render(request, template, {'post': posts[post_ids[id]]})
+    except KeyError:
         raise Http404("Post does not exist")
 
 
